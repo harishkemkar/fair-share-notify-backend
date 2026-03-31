@@ -24,8 +24,7 @@ pipeline {
             steps {
                 sh '''
                   docker build -t $ECR_REPO:$IMAGE_TAG .
-                  docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:latest
-
+               
                 '''
             }
         }
@@ -45,10 +44,7 @@ pipeline {
                   docker tag $ECR_REPO:$IMAGE_TAG $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
                   docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
                 
-                 # Push latest tag
-                  docker tag $ECR_REPO:latest $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:latest
-                  docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:latest
-
+                 
                 
                 '''
             }
