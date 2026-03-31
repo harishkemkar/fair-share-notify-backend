@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/HarishKemkar/fair-share-backend.git'
+                git branch: 'main', url: 'https://github.com/harishkemkar/fair-share-backend.git'
             }
         }
 
