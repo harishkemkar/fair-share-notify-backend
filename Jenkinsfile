@@ -9,11 +9,7 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/harishkemkar/fair-share-backend.git'
-            }
-        }
+
 
         stage('Build Backend') {
             steps {
