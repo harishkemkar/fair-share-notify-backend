@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    echo "Registering new task definition with image ${IMAGE_REPO}:${IMAGE_TAG}"
+                    echo "Registering new task definition with image ${IMAGE_REPO}:${params.IMAGE_TAG}"
                     aws ecs register-task-definition \
                         --family ${TASK_FAMILY} \
                         --network-mode awsvpc \
