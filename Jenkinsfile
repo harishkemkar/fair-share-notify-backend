@@ -54,7 +54,7 @@ pipeline {
     post {
         success {
             echo "✅ Backend image pushed to ECR with tag: ${IMAGE_TAG}"
-            sh "echo ${env.BUILD_NUMBER} > image_tag.txt"
+            sh "echo ${env.BUILD_NUMBER} > image_tag1.txt"
         }
         failure {
             echo "❌ Pipeline failed. Check logs."
