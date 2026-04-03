@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-
     parameters {
     string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker image tag to deploy')
     string(name: 'DESIRED_COUNT', defaultValue: '1', description: 'Number of tasks to run')
