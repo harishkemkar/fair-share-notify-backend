@@ -1,0 +1,72 @@
+
+curl -X POST http://localhost:4000/split \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 1200,
+    "friends": [
+      {"name": "Alice", "contact": "alice@example.com"},
+      {"name": "Bob", "contact": "bob@example.com"},
+      {"name": "Charlie", "contact": "charlie@example.com"}
+    ]
+  }'
+
+
+
+Outputs:
+
+backend_repo_url = "445842911672.dkr.ecr.ap-southeast-1.amazonaws.com/fair-share-backend"
+ec2_public_ip = "54.169.11.119"
+ecs_cluster_id = "arn:aws:ecs:ap-southeast-1:445842911672:cluster/fair-share-cluster"
+ecs_service_name = "backend-service"
+ecs_service_security_groups = tolist([
+  "sg-0bb19ea74700ec43e",
+])
+ecs_service_subnets = tolist([
+  "subnet-031f8faf700ebf2e5",
+])
+ecs_task_definition_arn = "arn:aws:ecs:ap-southeast-1:445842911672:task-definition/fair-share-backend:15"
+frontend_repo_url = "445842911672.dkr.ecr.ap-southeast-1.amazonaws.com/fair-share-frontend"
+instance_profile = "jenkins-agent-profile"
+
+
+
+
+
+
+ssh -i /c/HarishKemkar/local_repo/keys/singapore_key.pem ec2-user@54.255.222.208
+
+
+
+public ip of ECS task --   
+
+54.169.227.89
+54.254.167.131
+
+
+Checking from laoptop   
+
+
+curl -X POST http://54.169.227.89:4000/split \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 1200,
+    "friends": [
+      {"name": "Alice", "contact": "alice@example.com"},
+      {"name": "Bob", "contact": "bob@example.com"},
+      {"name": "Charlie", "contact": "charlie@example.com"}
+    ]
+  }'
+
+ curl -X POST http://54.254.167.131:4000/split   -H "Content-Type: application/json"   -d '{
+    "amount": 1200,
+    "friends": [
+      {"name": "Alice", "contact": "alice@example.com"},
+      {"name": "Bob", "contact": "bob@example.com"},
+      {"name": "Charlie", "contact": "charlie@example.com"}
+    ]
+  }'
+
+
+
+
+
