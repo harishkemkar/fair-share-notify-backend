@@ -23,14 +23,14 @@ pipeline {
                 script {
                     sh '''
                     echo "Registering new task definition with image ${IMAGE_REPO}:${IMAGE_TAG}"
-
-                    REVISION=$(aws ecs register-task-definition \
+                    aws ecs register-task-definition \
                         --family ${TASK_FAMILY} \
                         --network-mode awsvpc \
                         --requires-compatibilities FARGATE \
                         --cpu 256 \
                         --memory 512 \
                         --execution-role-arn arn:aws:iam::445842911672:role/ecsTaskExecutionRolefairandshare \
+                        --task-role-arn arn:aws:iam::445842911672:role/ecsTaskRoleFairShare \
                         --container-definitions "[{
                             \\"name\\": \\"backend\\",
                             \\"image\\": \\"${IMAGE_REPO}:${IMAGE_TAG}\\",
@@ -40,12 +40,7 @@ pipeline {
                                 \\"hostPort\\": 4000,
                                 \\"protocol\\": \\"tcp\\"
                             }]
-                        }]" \
-                        --query 'taskDefinition.taskDefinitionArn' \
-                        --output text)
-
-                    echo "✅ New task definition registered: $REVISION"
-                    echo $REVISION > latest_taskdef.txt
+                        }]"
                     '''
                 }
             }
@@ -56,16 +51,14 @@ pipeline {
                 script {
                     sh '''
                     echo "Updating ECS service ${SERVICE_NAME} to use latest task definition"
-                    LATEST_TASK_DEF=$(cat latest_taskdef.txt)
+                    LATEST_TASK_DEF=$(aws ecs describe-task-definition --task-definition ${TASK_FAMILY} --query "taskDefinition.taskDefinitionArn" --output text)
 
                     aws ecs update-service \
                         --cluster ${CLUSTER_ARN} \
                         --service ${SERVICE_NAME} \
                         --task-definition $LATEST_TASK_DEF \
                         --desired-count ${DESIRED_COUNT} \
-                        --force-new-deployment \
-                        --query 'service.{ServiceName:serviceName,Desired:desiredCount,Running:runningCount,Pending:pendingCount}' \
-                        --output table
+                        --force-new-deployment
 
                     echo "Waiting for tasks to stabilize..."
                     aws ecs wait services-stable --cluster ${CLUSTER_ARN} --services ${SERVICE_NAME}
@@ -74,7 +67,7 @@ pipeline {
                     TASK_ARN=$(aws ecs list-tasks --cluster ${CLUSTER_ARN} --service-name ${SERVICE_NAME} --desired-status RUNNING --query "taskArns[0]" --output text)
 
                     echo "Describing task to get ENI..."
-                    ENI_ID=$(aws ecs describe-tasks --cluster ${CLUSTER_ARN} --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name==\\`networkInterfaceId\\`].value" --output text)
+                    ENI_ID=$(aws ecs describe-tasks --cluster ${CLUSTER_ARN} --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name==`networkInterfaceId`].value" --output text)
 
                     echo "Fetching IPv4 address from ENI..."
                     PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query "NetworkInterfaces[0].Association.PublicIp" --output text)
