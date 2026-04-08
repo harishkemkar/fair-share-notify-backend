@@ -36,3 +36,7 @@ async def split_bill(request: SplitRequest):
         for f in request.friends
     ]
     return result
+
+@app.get("/api/health")
+def health_check():
+    return {"status": "ok"}
