@@ -25,7 +25,7 @@ class SplitRequest(BaseModel):
     amount: float
     friends: List[Friend]
 
-@app.post("/split")
+@app.post("/api/split")
 async def split_bill(request: SplitRequest):
     if not request.friends:
         return {"error": "No friends provided"}
